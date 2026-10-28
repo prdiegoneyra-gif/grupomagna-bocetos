@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gerosa Autos — Grupo Magna</title>
+<meta name="robots" content="noindex">
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,600;0,700;0,800;1,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#fff}
+a{color:#111;text-decoration:none}a:hover{color:#555}
+.wrap{max-width:1180px;margin:0 auto;padding:0 32px;box-sizing:border-box}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 22px;border-radius:6px;font:600 15px/1 Inter,sans-serif;box-sizing:border-box}
+.btn-wa{background:#1FA85A;color:#fff}.btn-wa:hover{background:#178A49;color:#fff}
+.btn-black{background:#111;color:#fff}.btn-black:hover{background:#333;color:#fff}
+.ph{background:#E9E9E9;color:#6B6B6B;display:flex;align-items:center;justify-content:center;font:500 12px Inter,sans-serif;letter-spacing:.04em;text-transform:uppercase}
+.car{background:#fff;border:1px solid #E3E3E3;border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+.car .b{padding:18px;display:flex;flex-direction:column;gap:6px}
+.spec{font:500 13px Inter,sans-serif;color:#6B6B6B;display:flex;gap:12px;flex-wrap:wrap}
+.price{font:800 20px Montserrat,sans-serif;color:#111}
+select,input{width:100%;box-sizing:border-box;min-height:46px;border:1px solid #CFCFCF;border-radius:6px;padding:10px 12px;font:400 15px Inter,sans-serif;color:#111;background:#fff}
+label{font:600 12px Inter,sans-serif;color:#444;display:block;margin-bottom:6px;letter-spacing:.04em;text-transform:uppercase}
+p{font:400 16px/1.6 Inter,sans-serif;color:#444;margin:0}
+h2{font:800 34px/1.1 Montserrat,sans-serif;margin:0;color:#111;font-style:italic;text-transform:uppercase;letter-spacing:-.01em}
+@media (max-width:900px){.g3{grid-template-columns:repeat(2,minmax(0,1fr)) !important}.g2{grid-template-columns:repeat(1,minmax(0,1fr)) !important}.f4{grid-template-columns:repeat(2,minmax(0,1fr)) !important}.nav{display:none !important}.hero{grid-template-columns:repeat(1,minmax(0,1fr)) !important}}
+@media (max-width:560px){.g3{grid-template-columns:repeat(1,minmax(0,1fr)) !important}.f4{grid-template-columns:repeat(1,minmax(0,1fr)) !important}}
+</style>
+
+</head>
+<body>
+<div style="position:fixed;left:0;right:0;bottom:0;z-index:50;background:#F5B71F;color:#1A1A1A;font:600 12px Inter,sans-serif;text-align:center;padding:6px 12px">BOCETO · versión preliminar para revisión — textos e imágenes de ejemplo</div>
+
+<div style="display:flex;flex-direction:column;font-family:Inter,sans-serif;color:#111">
+
+  <!-- Barra del grupo -->
+  <div style="background:#1A1A1A;color:#BDBDBD;font:500 12px Inter,sans-serif">
+    <div class="wrap" style="display:flex;justify-content:space-between;align-items:center;min-height:36px;gap:16px;flex-wrap:wrap">
+      <a href="index.html" style="color:#fff;font-weight:600">← grupo magna</a>
+      <div style="display:flex;gap:18px"><a href="gerosa-servicios.html" style="color:#BDBDBD">Gerosa Servicios</a><a href="guiza-viajes.html" style="color:#BDBDBD">Guiza Viajes</a><a href="magna-seguros.html" style="color:#BDBDBD">Magna Seguros</a></div>
+    </div>
+  </div>
+
+  <!-- Cabecera de la unidad -->
+  <header style="border-bottom:1px solid #E6E6E6">
+    <div class="wrap" style="display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:84px;flex-wrap:wrap">
+      <a href="#top" aria-label="Gerosa Autos — inicio"><img src="img/gerosa-autos-dark.png" alt="Gerosa Autos — grupo magna" style="height:64px;width:auto"></a>
+      <nav class="nav" style="display:flex;gap:26px;font:500 15px Inter,sans-serif" aria-label="Gerosa Autos"><a href="#catalogo">Catálogo</a><a href="#usados">Usados</a><a href="#financiacion">Financiación</a><a href="#contacto">Contacto</a></nav>
+      <a class="btn btn-wa" href="#contacto">Consultar por WhatsApp</a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section id="top" style="background:#111;color:#fff">
+    <div class="wrap hero" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:40px;align-items:center;padding-top:64px;padding-bottom:64px">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <span style="font:700 11px/1 Inter,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#BDBDBD">Belgrano 513 · Gálvez</span>
+        <h1 style="font:800 54px/1 Montserrat,sans-serif;font-style:italic;text-transform:uppercase;margin:0;letter-spacing:-.02em">Encontrá tu vehículo ideal</h1>
+        <p style="color:#CFCFCF;font-size:18px;max-width:480px">Venta de vehículos con asesoramiento personalizado. Mirá las unidades disponibles y consultá sin compromiso.</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn" href="#catalogo" style="background:#fff;color:#111">Ver unidades disponibles</a><a class="btn" href="#contacto" style="border:1.5px solid #fff;color:#fff">Quiero que me asesoren</a></div>
+      </div>
+      <div class="ph" style="height:380px;background:#2A2A2A;color:#9A9A9A;border-radius:10px">Foto unidad destacada</div>
+    </div>
+  </section>
+
+  <!-- Buscador -->
+  <section style="background:#F4F4F4;border-bottom:1px solid #E6E6E6">
+    <div class="wrap f4" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) 180px;gap:16px;align-items:end;padding-top:28px;padding-bottom:28px">
+      <div><label for="marca">Marca</label><select id="marca"><option>Todas</option></select></div>
+      <div><label for="modelo">Modelo</label><select id="modelo"><option>Todos</option></select></div>
+      <div><label for="anio">Año</label><select id="anio"><option>Cualquiera</option></select></div>
+      <div><label for="precio">Precio hasta</label><input id="precio" type="text" placeholder="$"></div>
+      <button class="btn btn-black" type="button" style="border:0;cursor:pointer;min-height:46px">Buscar</button>
+    </div>
+  </section>
+
+  <!-- Catálogo -->
+  <section id="catalogo">
+    <div class="wrap" style="display:flex;flex-direction:column;gap:28px;padding-top:64px;padding-bottom:64px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap"><h2>Unidades disponibles</h2><span style="font:500 14px Inter,sans-serif;color:#6B6B6B">[N] vehículos · ordenar por precio</span></div>
+      <div class="g3" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px">
+        <article class="car"><div class="ph" style="height:190px">Foto</div><div class="b"><strong style="font:700 17px Montserrat,sans-serif">[MARCA MODELO VERSIÓN]</strong><span class="spec"><span>[AÑO]</span><span>[KM] km</span><span>[COMBUSTIBLE]</span></span><span class="price">$ [PRECIO]</span><a class="btn btn-black" href="#contacto" style="margin-top:8px">Ver ficha</a></div></article>
+        <article class="car"><div class="ph" style="height:190px">Foto</div><div class="b"><strong style="font:700 17px Montserrat,sans-serif">[MARCA MODELO VERSIÓN]</strong><span class="spec"><span>[AÑO]</span><span>[KM] km</span><span>[COMBUSTIBLE]</span></span><span class="price">$ [PRECIO]</span><a class="btn btn-black" href="#contacto" style="margin-top:8px">Ver ficha</a></div></article>
+        <article class="car"><div class="ph" style="height:190px">Foto</div><div class="b"><strong style="font:700 17px Montserrat,sans-serif">[MARCA MODELO VERSIÓN]</strong><span class="spec"><span>[AÑO]</span><span>[KM] km</span><span>[COMBUSTIBLE]</span></span><span class="price">$ [PRECIO]</span><a class="btn btn-black" href="#contacto" style="margin-top:8px">Ver ficha</a></div></article>
+        <article class="car"><div class="ph" style="height:190px">Foto</div><div class="b"><strong style="font:700 17px Montserrat,sans-serif">[MARCA MODELO VERSIÓN]</strong><span class="spec"><span>[AÑO]</span><span>[KM] km</span><span>[COMBUSTIBLE]</span></span><span class="price">$ [PRECIO]</span><a class="btn btn-black" href="#contacto" style="margin-top:8px">Ver ficha</a></div></article>
+        <article class="car"><div class="ph" style="height:190px">Foto</div><div class="b"><strong style="font:700 17px Montserrat,sans-serif">[MARCA MODELO VERSIÓN]</strong><span class="spec"><span>[AÑO]</span><span>[KM] km</span><span>[COMBUSTIBLE]</span></span><span class="price">$ [PRECIO]</span><a class="btn btn-black" href="#contacto" style="margin-top:8px">Ver ficha</a></div></article>
+        <article class="car"><div class="ph" style="height:190px">Foto</div><div class="b"><strong style="font:700 17px Montserrat,sans-serif">[MARCA MODELO VERSIÓN]</strong><span class="spec"><span>[AÑO]</span><span>[KM] km</span><span>[COMBUSTIBLE]</span></span><span class="price">$ [PRECIO]</span><a class="btn btn-black" href="#contacto" style="margin-top:8px">Ver ficha</a></div></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Confianza + contacto -->
+  <section id="contacto" style="background:#F4F4F4">
+    <div class="wrap g2" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:48px;align-items:center;padding-top:64px;padding-bottom:64px">
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <h2>¿Buscás algo puntual?</h2>
+        <p>Contanos qué vehículo tenés en mente y te avisamos cuando ingrese una unidad. También tomamos tu usado como parte de pago.</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn btn-wa" href="#contacto">Hablar por WhatsApp</a><a class="btn" href="#contacto" style="border:1.5px solid #111;color:#111">Dejar mi consulta</a></div>
+        <span style="font:500 14px Inter,sans-serif;color:#6B6B6B">Belgrano 513, Gálvez · [TELÉFONO] · [HORARIO]</span>
+      </div>
+      <div class="ph" style="height:300px;border-radius:10px">Foto salón de ventas</div>
+    </div>
+  </section>
+
+  <footer style="background:#111;color:#BDBDBD;font:400 13px/1.7 Inter,sans-serif"><div class="wrap" style="display:flex;justify-content:space-between;gap:16px;padding-top:28px;padding-bottom:28px;flex-wrap:wrap"><span>Gerosa Autos · Belgrano 513, Gálvez, Santa Fe</span><span>Una empresa de <a href="index.html" style="color:#fff">grupo magna</a></span></div></footer>
+</div>
+
+<div style="height:30px"></div>
+</body>
+</html>
