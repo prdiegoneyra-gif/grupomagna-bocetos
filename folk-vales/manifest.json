@@ -1,0 +1,15 @@
+{
+  "name": "Vales FOLK",
+  "short_name": "Vales FOLK",
+  "description": "Caja de vales de FOLK cantina de campo",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#DDCBB2",
+  "theme_color": "#DDCBB2",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ]
+}
