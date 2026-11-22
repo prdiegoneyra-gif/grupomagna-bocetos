@@ -287,7 +287,7 @@ pre.ticket{font:13px/1.35 ui-monospace,Menlo,Consolas,monospace;background:var(-
 (function(){
 'use strict';
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-const KEY='folk_vales_v1';
+const KEY='folk_vales_v2';
 const hoy=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 const fmt=n=>'$ '+Math.round(n).toLocaleString('es-AR');
 const fmtDia=iso=>{const [y,m,d]=iso.split('-');return d+'/'+m+'/'+y};
@@ -296,15 +296,28 @@ const hora=ts=>new Date(ts).toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2
 /* ---------- Estado ---------- */
 let S={
   productos:[
-    {id:'p1',nombre:'Hamburguesa completa',precio:9000,cat:'comida',activo:true},
-    {id:'p2',nombre:'Choripán',precio:5000,cat:'comida',activo:true},
-    {id:'p3',nombre:'Papas fritas',precio:4500,cat:'comida',activo:true},
-    {id:'p4',nombre:'Empanadas x3',precio:4500,cat:'comida',activo:true},
-    {id:'p5',nombre:'Fernet con coca',precio:6000,cat:'bebida',activo:true},
-    {id:'p6',nombre:'Cerveza',precio:4000,cat:'bebida',activo:true},
-    {id:'p7',nombre:'Gaseosa',precio:2500,cat:'bebida',activo:true},
-    {id:'p8',nombre:'Agua',precio:2000,cat:'bebida',activo:true},
-    {id:'p9',nombre:'Vino copa',precio:3500,cat:'bebida',activo:true}
+    {id:'c1',nombre:"Hamburguesa de Cerdo completa",precio:7000,cat:'comida',activo:true},
+    {id:'c2',nombre:"Choripán",precio:6000,cat:'comida',activo:true},
+    {id:'c3',nombre:"Empanadas x 12",precio:30000,cat:'comida',activo:true},
+    {id:'c4',nombre:"Empanadas 1/2",precio:15000,cat:'comida',activo:true},
+    {id:'c5',nombre:"Sandwich Bondiola FOLK",precio:12000,cat:'comida',activo:true},
+    {id:'c6',nombre:"Picada de Campo",precio:16000,cat:'comida',activo:true},
+    {id:'c7',nombre:"Tostón FOLK",precio:12000,cat:'comida',activo:true},
+    {id:'b1',nombre:"C/Fernet con Coca 750cc",precio:10000,cat:'bebida',activo:true},
+    {id:'b2',nombre:"Pinta Loma Alta",precio:6000,cat:'bebida',activo:true},
+    {id:'b3',nombre:"C/Gaseosa 750cc",precio:6000,cat:'bebida',activo:true},
+    {id:'b4',nombre:"Agua chica",precio:2500,cat:'bebida',activo:true},
+    {id:'b5',nombre:"Santa Fe Lata",precio:5000,cat:'bebida',activo:true},
+    {id:'b6',nombre:"Soda chica",precio:2500,cat:'bebida',activo:true},
+    {id:'b7',nombre:"C/Agua Saborizada",precio:6000,cat:'bebida',activo:true},
+    {id:'b8',nombre:"Santa Fe 1Lt",precio:7000,cat:'bebida',activo:true},
+    {id:'b9',nombre:"Coronita",precio:7000,cat:'bebida',activo:true},
+    {id:'b10',nombre:"Vermut vaso",precio:6000,cat:'bebida',activo:true},
+    {id:'b11',nombre:"Copón Gancia 750cc",precio:9000,cat:'bebida',activo:true},
+    {id:'b12',nombre:"Santa Julia Malbec",precio:15000,cat:'bebida',activo:true},
+    {id:'b13',nombre:"Santa Julia Blanco",precio:15000,cat:'bebida',activo:true},
+    {id:'b14',nombre:"Trumpeter Malbec",precio:20000,cat:'bebida',activo:true},
+    {id:'b15',nombre:"Vaso Gancia",precio:5000,cat:'bebida',activo:true}
   ],
   dia:hoy(), contador:0, ventas:[], historial:[], modo:null
 };
