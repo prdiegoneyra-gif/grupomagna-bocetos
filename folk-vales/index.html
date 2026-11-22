@@ -141,6 +141,7 @@ td.r,th.r{text-align:right}
 .status{padding:10px 12px;border-radius:10px;background:var(--surface2);font-size:14px;border-left:4px solid var(--warn)}
 .status.ok{border-left-color:var(--ok)}
 .status.bad{border-left-color:var(--bad)}
+tr.anulada td{color:var(--ink2);text-decoration:line-through}tr.anulada td b{text-decoration:none;color:var(--bad)}
 pre.ticket{font:13px/1.35 ui-monospace,Menlo,Consolas,monospace;background:var(--bg);border:1px dashed var(--line);padding:12px;border-radius:8px;white-space:pre;overflow-x:auto;margin:10px 0}
 
 /* Toast y modal */
@@ -213,7 +214,7 @@ pre.ticket{font:13px/1.35 ui-monospace,Menlo,Consolas,monospace;background:var(-
         <button aria-pressed="false" data-p="Tarjeta">Tarjeta</button>
       </div>
       <button class="cobrar" id="btnCobrar" disabled>Cobrar e imprimir<small id="cobrarSub">0 vales</small></button>
-      <div class="row"><button class="ghost danger" id="btnVaciar">Vaciar</button><button class="ghost" id="btnReimp">Reimprimir último pedido</button></div>
+      <div class="row"><button class="ghost danger" id="btnVaciar">Vaciar</button><button class="ghost" id="btnReimp">Reimprimir último</button><button class="ghost danger" id="btnAnularUlt">Anular último</button></div>
     </div>
   </aside>
   <div class="mbar" id="mbar"><div><span id="mbarSub">0 vales</span><b class="num" id="mbarTot">$ 0</b></div><button id="mbarBtn">Ver pedido</button></div>
@@ -326,8 +327,8 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 function nuevoDiaSiCorresponde(){ if(S.dia!==hoy()){ archivarDia(); } }
 function archivarDia(){
   if(S.ventas.length){
-    const tot=S.ventas.reduce((a,v)=>a+v.total,0), vales=S.ventas.reduce((a,v)=>a+v.vales,0);
-    S.historial.unshift({dia:S.dia,pedidos:S.ventas.length,vales,total:tot,ventas:S.ventas});
+    const ok=S.ventas.filter(v=>!v.anulada);const tot=ok.reduce((a,v)=>a+v.total,0), vales=ok.reduce((a,v)=>a+v.vales,0);
+    S.historial.unshift({dia:S.dia,pedidos:ok.length,vales,total:tot,ventas:S.ventas});
     S.historial=S.historial.slice(0,30);
   }
   S.ventas=[];S.contador=0;S.dia=hoy();save();
@@ -379,7 +380,7 @@ function renderPedido(){
   const vt=vales+(vales===1?' vale':' vales');
   $('#pedVales').textContent=vt;$('#cobrarSub').textContent=vt+(vales?' · se imprimen uno por uno':'');$('#mbarSub').textContent=vt;
   $('#btnCobrar').disabled=!vales;
-  $('#btnReimp').style.display=ultimaVenta?'':'none';
+  $('#btnReimp').style.display=ultimaVenta?'':'none';$('#btnAnularUlt').style.display=(ultimaVenta&&!ultimaVenta.anulada)?'':'none';
 }
 $('#btnVaciar').addEventListener('click',()=>{pedido={};renderPedido();renderGrid()});
 $('#mbarBtn').addEventListener('click',()=>{$('#pedido').classList.add('open');$('#btnCerrarPed').style.display=''});
@@ -396,6 +397,12 @@ $('#btnCobrar').addEventListener('click',async()=>{
   await imprimirVenta(v);
 });
 $('#btnReimp').addEventListener('click',()=>{if(ultimaVenta)imprimirVenta(ultimaVenta)});
+$('#btnAnularUlt').addEventListener('click',()=>{if(ultimaVenta)anular(ultimaVenta)});
+function anular(v){
+  if(v.anulada){v.anulada=false;save();renderCierre();toast('Pedido #'+String(v.n).padStart(3,'0')+' restaurado');return}
+  modal(`<h3>¿Anular el pedido #${String(v.n).padStart(3,'0')}?</h3><p style="margin:0">${fmt(v.total)} · ${v.items.map(i=>i.cant+'× '+i.nombre).join(', ')}.<br>Deja de sumar en el cierre y queda marcado como anulado. Recuperá los vales impresos si ya los entregaste.</p><div class="acts"><button class="ghost" id="mno">Volver</button><button class="primary" id="msi">Sí, anular</button></div>`);
+  $('#mno').addEventListener('click',cerrarModal);$('#msi').addEventListener('click',()=>{v.anulada=true;save();cerrarModal();renderCierre();renderPedido();toast('Pedido #'+String(v.n).padStart(3,'0')+' anulado')});
+}
 
 /* ---------- Tickets ESC/POS ---------- */
 const ESC=0x1B,GS=0x1D;
@@ -515,21 +522,22 @@ $('#btnPrueba').addEventListener('click',async()=>{
 /* ---------- Cierre ---------- */
 function resumen(){
   const prod={},pagoM={};let total=0,vales=0;
-  S.ventas.forEach(v=>{total+=v.total;vales+=v.vales;pagoM[v.pago]=pagoM[v.pago]||{nombre:v.pago,cant:0,importe:0};pagoM[v.pago].cant++;pagoM[v.pago].importe+=v.total;
+  S.ventas.filter(v=>!v.anulada).forEach(v=>{total+=v.total;vales+=v.vales;pagoM[v.pago]=pagoM[v.pago]||{nombre:v.pago,cant:0,importe:0};pagoM[v.pago].cant++;pagoM[v.pago].importe+=v.total;
     v.items.forEach(it=>{prod[it.nombre]=prod[it.nombre]||{nombre:it.nombre,cant:0,importe:0};prod[it.nombre].cant+=it.cant;prod[it.nombre].importe+=it.cant*it.precio})});
-  return {total,vales,pedidos:S.ventas.length,prod:Object.values(prod).sort((a,b)=>b.importe-a.importe),pago:Object.values(pagoM)};
+  return {total,vales,pedidos:S.ventas.filter(v=>!v.anulada).length,anulados:S.ventas.filter(v=>v.anulada).length,prod:Object.values(prod).sort((a,b)=>b.importe-a.importe),pago:Object.values(pagoM)};
 }
 function renderCierre(){
   nuevoDiaSiCorresponde();const R=resumen();
-  $('#cieDia').textContent=fmtDia(S.dia);$('#kTotal').textContent=fmt(R.total);$('#kPed').textContent=R.pedidos;$('#kVales').textContent=R.vales;$('#kProm').textContent=fmt(R.pedidos?R.total/R.pedidos:0);
+  $('#cieDia').textContent=fmtDia(S.dia);$('#kTotal').textContent=fmt(R.total);$('#kPed').textContent=R.pedidos;$('#kVales').textContent=R.vales;$('#kProm').textContent=fmt(R.pedidos?R.total/R.pedidos:0);$('#kPed').textContent=R.pedidos+(R.anulados?' ('+R.anulados+' anul.)':'');
   $('#tProd').innerHTML=R.prod.map(p=>`<tr><td></td><td class="r num">${p.cant}</td><td class="r num">${fmt(p.importe)}</td></tr>`).join('')||'<tr><td colspan="3" style="color:var(--ink2)">Todavía no hay ventas hoy.</td></tr>';
   [...$('#tProd').querySelectorAll('tr')].forEach((tr,i)=>{if(R.prod[i])tr.firstElementChild.textContent=R.prod[i].nombre});
   $('#tPago').innerHTML=R.pago.map(p=>`<tr><td>${p.nombre}</td><td class="r num">${p.cant}</td><td class="r num">${fmt(p.importe)}</td></tr>`).join('')||'<tr><td colspan="3" style="color:var(--ink2)">—</td></tr>';
   const tv=$('#tVentas');tv.innerHTML='';
   [...S.ventas].reverse().forEach(v=>{const tr=document.createElement('tr');
-    tr.innerHTML=`<td class="num">#${String(v.n).padStart(3,'0')}</td><td class="num">${hora(v.ts)}</td><td class="det"></td><td>${v.pago}</td><td class="r num">${fmt(v.total)}</td><td class="r"><button class="ghost">Reimprimir</button></td>`;
+    tr.className=v.anulada?'anulada':'';
+    tr.innerHTML=`<td class="num">#${String(v.n).padStart(3,'0')}</td><td class="num">${hora(v.ts)}</td><td class="det"></td><td>${v.anulada?'<b>ANULADO</b>':v.pago}</td><td class="r num">${fmt(v.total)}</td><td class="r"><span class="row" style="justify-content:flex-end;flex-wrap:nowrap"><button class="ghost">Reimprimir</button><button class="ghost danger">${v.anulada?'Restaurar':'Anular'}</button></span></td>`;
     tr.querySelector('.det').textContent=v.items.map(i=>i.cant+'× '+i.nombre).join(', ');
-    tr.querySelector('button').addEventListener('click',()=>imprimirVenta(v));tv.appendChild(tr)});
+    const [bR,bA]=tr.querySelectorAll('button');bR.addEventListener('click',()=>imprimirVenta(v));bA.addEventListener('click',()=>anular(v));tv.appendChild(tr)});
   if(!S.ventas.length)tv.innerHTML='<tr><td colspan="6" style="color:var(--ink2)">Los pedidos cobrados aparecen acá.</td></tr>';
   $('#histPanel').hidden=!S.historial.length;
   $('#tHist').innerHTML=S.historial.map(h=>`<tr><td>${fmtDia(h.dia)}</td><td class="r num">${h.pedidos}</td><td class="r num">${h.vales}</td><td class="r num">${fmt(h.total)}</td></tr>`).join('');
