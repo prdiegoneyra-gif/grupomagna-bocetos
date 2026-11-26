@@ -247,7 +247,7 @@ pre.ticket{font:13px/1.35 ui-monospace,Menlo,Consolas,monospace;background:var(-
   </div>
   <div class="panel" id="histPanel" hidden>
     <h2>Días anteriores</h2>
-    <div class="tbl"><table><thead><tr><th>Día</th><th class="r">Pedidos</th><th class="r">Vales</th><th class="r">Recaudado</th></tr></thead><tbody id="tHist"></tbody></table></div>
+    <div class="tbl"><table><thead><tr><th>Día</th><th class="r">Pedidos</th><th class="r">Vales</th><th class="r">Recaudado</th><th></th></tr></thead><tbody id="tHist"></tbody></table></div>
   </div>
 </section>
 
@@ -540,7 +540,32 @@ function renderCierre(){
     const [bR,bA]=tr.querySelectorAll('button');bR.addEventListener('click',()=>imprimirVenta(v));bA.addEventListener('click',()=>anular(v));tv.appendChild(tr)});
   if(!S.ventas.length)tv.innerHTML='<tr><td colspan="6" style="color:var(--ink2)">Los pedidos cobrados aparecen acá.</td></tr>';
   $('#histPanel').hidden=!S.historial.length;
-  $('#tHist').innerHTML=S.historial.map(h=>`<tr><td>${fmtDia(h.dia)}</td><td class="r num">${h.pedidos}</td><td class="r num">${h.vales}</td><td class="r num">${fmt(h.total)}</td></tr>`).join('');
+  const th=$('#tHist');th.innerHTML='';
+  S.historial.forEach(h=>{const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${fmtDia(h.dia)}</td><td class="r num">${h.pedidos}</td><td class="r num">${h.vales}</td><td class="r num">${fmt(h.total)}</td><td class="r"><button class="ghost">Ver detalle</button></td>`;
+    tr.querySelector('button').addEventListener('click',()=>detalleDia(h));th.appendChild(tr)});
+}
+/* Detalle por producto de un día ya cerrado */
+function resumenDia(h){
+  const prod={},pagoM={};const ok=(h.ventas||[]).filter(v=>!v.anulada);
+  ok.forEach(v=>{pagoM[v.pago]=pagoM[v.pago]||{nombre:v.pago,cant:0,importe:0};pagoM[v.pago].cant++;pagoM[v.pago].importe+=v.total;
+    v.items.forEach(it=>{prod[it.nombre]=prod[it.nombre]||{nombre:it.nombre,cant:0,importe:0};prod[it.nombre].cant+=it.cant;prod[it.nombre].importe+=it.cant*it.precio})});
+  return {prod:Object.values(prod).sort((a,b)=>b.importe-a.importe),pago:Object.values(pagoM),anulados:(h.ventas||[]).length-ok.length};
+}
+function detalleTexto(h){const R=resumenDia(h);return ['FOLK · Cierre de caja '+fmtDia(h.dia),'Pedidos: '+h.pedidos+' · Vales: '+h.vales+(R.anulados?' · Anulados: '+R.anulados:''),'RECAUDADO: '+fmt(h.total),'',...R.prod.map(p=>p.nombre+' x'+p.cant+' = '+fmt(p.importe)),'',...R.pago.map(p=>p.nombre+' ('+p.cant+'): '+fmt(p.importe))].join('\n')}
+function detalleDia(h){
+  const R=resumenDia(h);
+  const m=modal(`<h3>Cierre del ${fmtDia(h.dia)}</h3><p style="margin:0 0 8px">Recaudado <b class="num">${fmt(h.total)}</b> · ${h.pedidos} pedidos · ${h.vales} vales${R.anulados?' · '+R.anulados+' anulados':''}</p>
+    <div class="tbl" style="max-height:46vh;overflow:auto"><table><thead><tr><th>Producto</th><th class="r">Vales</th><th class="r">Importe</th></tr></thead><tbody id="dProd"></tbody></table>
+    <table style="margin-top:12px"><thead><tr><th>Forma de pago</th><th class="r">Pedidos</th><th class="r">Importe</th></tr></thead><tbody id="dPago"></tbody></table></div>
+    <div class="acts"><button class="ghost" id="dCopiar">Copiar detalle</button><button class="primary" id="dOk">Cerrar</button></div>`);
+  const fila=(tb,a,b,c)=>{const tr=document.createElement('tr');const td=document.createElement('td');td.textContent=a;tr.appendChild(td);
+    [b,c].forEach(x=>{const t=document.createElement('td');t.className='r num';t.textContent=x;tr.appendChild(t)});tb.appendChild(tr)};
+  R.prod.forEach(p=>fila(m.querySelector('#dProd'),p.nombre,p.cant,fmt(p.importe)));
+  R.pago.forEach(p=>fila(m.querySelector('#dPago'),p.nombre,p.cant,fmt(p.importe)));
+  if(!R.prod.length)fila(m.querySelector('#dProd'),'Este día no tiene el detalle guardado.','','');
+  m.querySelector('#dOk').addEventListener('click',cerrarModal);
+  m.querySelector('#dCopiar').addEventListener('click',()=>{navigator.clipboard.writeText(detalleTexto(h)).then(()=>toast('Detalle copiado'),()=>toast('No se pudo copiar: sacale una captura'))});
 }
 function resumenTexto(){const R=resumen();return ['FOLK · Cierre de caja '+fmtDia(S.dia),'Pedidos: '+R.pedidos+' · Vales: '+R.vales,'RECAUDADO: '+fmt(R.total),'',...R.prod.map(p=>p.nombre+' x'+p.cant+' = '+fmt(p.importe)),'',...R.pago.map(p=>p.nombre+' ('+p.cant+'): '+fmt(p.importe))].join('\n')}
 $('#btnImpCierre').addEventListener('click',async()=>{if(!S.modo){modalModo();return}try{await enviar(cierreBytes(),resumenTexto());toast('Cierre enviado a la impresora')}catch(e){toast('No se pudo imprimir: '+e.message)}});
